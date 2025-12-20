@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Student Performance Predictor</title>
+
+    <style>
+        /* ---------- GLOBAL ---------- */
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(-45deg, #667eea, #764ba2, #43cea2, #185a9d);
+            background-size: 400% 400%;
+            animation: gradientBG 12s ease infinite;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        /* ---------- CARD ---------- */
+        .login {
+            width: 100%;
+            max-width: 580px;
+            padding: 35px;
+            border-radius: 18px;
+            background: rgba(255, 255, 255, 0.18);
+            backdrop-filter: blur(14px);
+            box-shadow: 0 20px 45px rgba(0, 0, 0, 0.25);
+            animation: fadeIn 0.8s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* ---------- HEADERS ---------- */
+        h1 {
+            text-align: center;
+            color: #fff;
+            margin-bottom: 10px;
+            font-size: 26px;
+        }
+
+        legend {
+            text-align: center;
+            color: #eaeaea;
+            font-size: 16px;
+            margin-bottom: 25px;
+            display: block;
+        }
+
+        /* ---------- FORM ---------- */
+        .mb-3 {
+            margin-bottom: 18px;
+        }
+
+        .form-label {
+            color: #f1f1f1;
+            font-size: 14px;
+            margin-bottom: 6px;
+            display: block;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 12px 14px;
+            border-radius: 10px;
+            border: none;
+            font-size: 14px;
+            background: rgba(255, 255, 255, 0.85);
+            transition: 0.3s ease;
+        }
+
+        .form-control:focus {
+            outline: none;
+            transform: scale(1.02);
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.35);
+        }
+
+        /* ---------- BUTTON ---------- */
+        .btn {
+            width: 100%;
+            padding: 14px;
+            border-radius: 12px;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.4);
+        }
+
+        /* ---------- PROGRESS BAR ---------- */
+        .progress {
+            height: 6px;
+            background: rgba(255,255,255,0.3);
+            border-radius: 5px;
+            margin-bottom: 25px;
+            overflow: hidden;
+        }
+
+        .progress-bar {
+            height: 100%;
+            width: 70%;
+            background: linear-gradient(90deg, #43cea2, #185a9d);
+            animation: load 1.5s ease-in-out;
+        }
+
+        @keyframes load {
+            from { width: 0; }
+            to { width: 70%; }
+        }
+
+        /* ---------- PREDICTION ---------- */
+        .prediction-box {
+            margin-top: 25px;
+            padding: 18px;
+            border-radius: 12px;
+            background: rgba(255,255,255,0.9);
+            text-align: center;
+            font-size: 18px;
+            font-weight: 600;
+            color: #333;
+            box-shadow: 0 0 25px rgba(67, 206, 162, 0.8);
+            animation: glow 2s infinite alternate;
+        }
+
+        @keyframes glow {
+            from { box-shadow: 0 0 15px rgba(67, 206, 162, 0.6); }
+            to { box-shadow: 0 0 30px rgba(67, 206, 162, 1); }
+        }
+
+        @media (max-width: 600px) {
+            .login {
+                padding: 25px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="login">
+    <h1>Student Exam Performance Indicator</h1>
+    <legend>AI-Powered Score Prediction</legend>
+
+    <div class="progress">
+        <div class="progress-bar"></div>
+    </div>
+
+    <form action="{{ url_for('predict_datapoint') }}" method="post">
+
+        <div class="mb-3">
+            <label class="form-label">Gender</label>
+            <select class="form-control" name="gender" required>
+                <option selected disabled value="">Select your Gender</option>
+                <option value="male">Male</option>
+                <option value="female">Female</option>
+            </select>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Race or Ethnicity</label>
+            <select class="form-control" name="ethnicity" required>
+                <option selected disabled value="">Select Ethnicity</option>
+                <option value="group A">Group A</option>
+                <option value="group B">Group B</option>
+                <option value="group C">Group C</option>
+                <option value="group D">Group D</option>
+                <option value="group E">Group E</option>
+            </select>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Parental Level of Education</label>
+            <select class="form-control" name="parental_level_of_education" required>
+                <option selected disabled value="">Select Parent Education</option>
+                <option value="associate's degree">associate's degree</option>
+                <option value="bachelor's degree">bachelor's degree</option>
+                <option value="high school">high school</option>
+                <option value="master's degree">master's degree</option>
+                <option value="some college">some college</option>
+                <option value="some high school">some high school</option>
+            </select>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Lunch Type</label>
+            <select class="form-control" name="lunch" required>
+                <option selected disabled value="">Select Lunch Type</option>
+                <option value="free/reduced">free/reduced</option>
+                <option value="standard">standard</option>
+            </select>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Test Preparation Course</label>
+            <select class="form-control" name="test_preparation_course" required>
+                <option selected disabled value="">Select Test Course</option>
+                <option value="none">None</option>
+                <option value="completed">Completed</option>
+            </select>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Writing Score (0–100)</label>
+            <input class="form-control" type="number" name="reading_score" min="0" max="100">
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Reading Score (0–100)</label>
+            <input class="form-control" type="number" name="writing_score" min="0" max="100">
+        </div>
+
+        <div class="mb-3">
+            <input class="btn btn-primary" type="submit" value="Predict Maths Score">
+        </div>
+    </form>
+
+    {% if results %}
+    <div class="prediction-box">
+        🎯 Predicted Maths Score: {{ results }}
+    </div>
+    {% endif %}
+</div>
+
+</body>
+</html>
+
